@@ -1,4 +1,6 @@
+import Benefits from "../components/benefits";
 import FeaturedJobs from "../components/featuredJob";
+import Footer from "../components/footer";
 import Hero from "../components/hero";
 import HowItWorks from "../components/howItWorks";
 import SearchBar from "../components/searchBar";
@@ -10,6 +12,8 @@ export default function HomePage() {
             <SearchBar />
             <FeaturedJobs />
             <HowItWorks />
+            <Benefits />
+            <Footer />
         </>
     )
 }
