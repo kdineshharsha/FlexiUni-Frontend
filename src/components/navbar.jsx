@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Menu, X, GraduationCap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,8 +23,8 @@ export default function Navbar() {
                         <a href="#" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Post a Job</a>
                         <a href="#" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">About Us</a>
                         <div className="flex items-center gap-4 border-l border-slate-200 pl-8">
-                            <button className="text-slate-600 font-medium hover:text-slate-900 transition-colors">Log in</button>
-                            <button className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 font-medium transition-colors shadow-sm">Sign up</button>
+                            <Link to="/login" className="text-slate-600 font-medium hover:text-slate-900 transition-colors">Log in</Link>
+                            <Link to="/register" className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 font-medium transition-colors shadow-sm">Sign up</Link>
                         </div>
                     </div>
 
