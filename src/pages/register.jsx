@@ -21,7 +21,7 @@ export default function Register() {
                     <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-md">
                         <GraduationCap className="w-8 h-8" />
                     </div>
-                    <span className="font-bold text-3xl tracking-tight text-slate-900">CampusWork</span>
+                    <span className="font-bold text-3xl tracking-tight text-slate-900">Flexi<span className="text-indigo-600">Uni</span></span>
                 </Link>
                 <h2 className="text-center text-3xl font-extrabold text-slate-900">
                     Create an account
