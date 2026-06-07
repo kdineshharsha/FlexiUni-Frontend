@@ -18,14 +18,11 @@ export default function Login() {
 
         try {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/v1/auth/login`, data);
-
-
             login(response.data.data.token, response.data.data.user);
             toast.success('Logged in successfully!');
             navigate('/');
         } catch (error) {
             const currentError = error.response?.data?.message || 'An error occurred during login.';
-
             toast.error(currentError);
         } finally {
             setIsLoading(false);

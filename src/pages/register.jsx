@@ -1,16 +1,50 @@
 import { useState } from 'react';
 import { Mail, Lock, User, GraduationCap, ArrowRight, Briefcase } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { SRI_LANKAN_INSTITUTES } from '../constants/universities.js';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 export default function Register() {
 
+    const { register, handleSubmit, control } = useForm();
+    const [isLoading, setIsLoading] = useState(false);
     const [role, setRole] = useState('student');
     const universityOptions = SRI_LANKAN_INSTITUTES.map((uni) => ({
         value: uni,
         label: uni
     }));
+    const navigate = useNavigate();
+
+    const onSubmit = async (data) => {
+        setIsLoading(true);
+        try {
+
+            const payload = {
+                fullName: data.fullName,
+                email: data.email,
+                password: data.password,
+                role: role,
+
+            }
+
+            if (role === 'student') {
+                payload.studentId = data.studentId;
+                payload.university = data.university?.value;
+            }
+
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/v1/auth/register`, payload);
+            toast.success('Account created successfully! Please log in.');
+            navigate('/login');
+        } catch (error) {
+            const currentError = error.response?.data?.message || 'An error occurred during registration.';
+            toast.error(currentError);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -37,7 +71,7 @@ export default function Register() {
             {/* Signup Card */}
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-slate-100">
-                    <form className="space-y-5" action="#" method="POST">
+                    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
 
                         {/* Role Selection Toggle */}
                         <div>
@@ -78,12 +112,13 @@ export default function Register() {
                                     <User className="h-5 w-5 text-slate-400" />
                                 </div>
                                 <input
-                                    id="name"
-                                    name="name"
+                                    id="fullName"
+                                    name="fullName"
                                     type="text"
                                     required
                                     className="block w-full pl-10 pr-3 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-slate-50 focus:bg-white transition-colors"
                                     placeholder={role === 'student' ? "Harsha Madushan" : "Star Garments"}
+                                    {...register("fullName", { required: "Name is required" })}
                                 />
                             </div>
                         </div>
@@ -106,6 +141,7 @@ export default function Register() {
                                             required
                                             className="block w-full pl-10 pr-3 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-slate-50 focus:bg-white transition-colors"
                                             placeholder="e.g. IT20261042"
+                                            {...register("studentId", { required: "Student ID is required" })}
                                         />
                                     </div>
                                 </div>
@@ -116,25 +152,32 @@ export default function Register() {
                                         University / Institute
                                     </label>
                                     <div className="mt-1">
-                                        <Select
-                                            options={universityOptions}
-                                            placeholder="Search and select your university..."
-                                            unstyled
-                                            classNames={{
-                                                control: ({ isFocused }) =>
-                                                    `block w-full rounded-xl border ${isFocused ? 'border-indigo-500 ring-2 ring-indigo-500 bg-white' : 'border-slate-300 bg-slate-50'} transition-colors text-sm shadow-sm py-1.5 px-2`,
-                                                menu: () => "mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50",
-                                                option: ({ isFocused, isSelected }) =>
-                                                    `px-4 py-3 cursor-pointer text-sm transition-colors ${isSelected
-                                                        ? 'bg-indigo-600 text-white font-semibold'
-                                                        : isFocused
-                                                            ? 'bg-indigo-50 text-indigo-700'
-                                                            : 'text-slate-700 hover:bg-slate-50'
-                                                    }`,
-                                                noOptionsMessage: () => "text-slate-500 p-4 text-sm",
-                                                placeholder: () => "text-slate-400 ml-1",
-                                                singleValue: () => "text-slate-900 ml-1",
-                                            }}
+                                        <Controller
+                                            name="university"
+                                            control={control}
+                                            rules={{ required: "University selection is required" }}
+                                            render={({ field }) => (
+                                                <Select
+                                                    {...field}
+                                                    options={universityOptions}
+                                                    placeholder="Search and select your university..."
+                                                    unstyled
+                                                    classNames={{
+                                                        control: ({ isFocused }) =>
+                                                            `block w-full rounded-xl border ${isFocused ? 'border-indigo-500 ring-2 ring-indigo-500 bg-white' : 'border-slate-300 bg-slate-50'} transition-colors text-sm shadow-sm py-1.5 px-2`,
+                                                        menu: () => "mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50",
+                                                        option: ({ isFocused, isSelected }) =>
+                                                            `px-4 py-3 cursor-pointer text-sm transition-colors ${isSelected
+                                                                ? 'bg-indigo-600 text-white font-semibold'
+                                                                : isFocused
+                                                                    ? 'bg-indigo-50 text-indigo-700'
+                                                                    : 'text-slate-700 hover:bg-slate-50'
+                                                            }`,
+                                                        noOptionsMessage: () => "text-slate-500 p-4 text-sm",
+                                                        placeholder: () => "text-slate-400 ml-1",
+                                                        singleValue: () => "text-slate-900 ml-1",
+                                                    }}
+                                                />)}
                                         />
                                     </div>
                                 </div>
@@ -157,6 +200,13 @@ export default function Register() {
                                     required
                                     className="block w-full pl-10 pr-3 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-slate-50 focus:bg-white transition-colors"
                                     placeholder="you@example.com"
+                                    {...register("email", {
+                                        required: "Email is required",
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "Invalid email address",
+                                        },
+                                    })}
                                 />
                             </div>
                         </div>
@@ -177,6 +227,7 @@ export default function Register() {
                                     required
                                     className="block w-full pl-10 pr-3 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-slate-50 focus:bg-white transition-colors"
                                     placeholder="••••••••"
+                                    {...register("password", { required: "Password is required" })}
                                 />
                             </div>
                         </div>
@@ -199,9 +250,10 @@ export default function Register() {
                         <div className="pt-2">
                             <button
                                 type="submit"
-                                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all hover:shadow-lg hover:-translate-y-0.5 group"
+                                disabled={isLoading}
+                                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all hover:shadow-lg hover:-translate-y-0.5 group disabled:opacity-70 disabled:cursor-not-allowed"
                             >
-                                Create Account
+                                {isLoading ? "Creating Account..." : "Sign Up"}
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </div>
