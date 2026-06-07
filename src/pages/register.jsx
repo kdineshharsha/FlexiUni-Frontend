@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { SRI_LANKAN_INSTITUTES } from '../constants/universities.js';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import api from '../api/axios.js';
 
 export default function Register() {
 
@@ -35,7 +35,7 @@ export default function Register() {
                 payload.university = data.university?.value;
             }
 
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/v1/auth/register`, payload);
+            await api.post(`/v1/auth/register`, payload);
             toast.success('Account created successfully! Please log in.');
             navigate('/login');
         } catch (error) {

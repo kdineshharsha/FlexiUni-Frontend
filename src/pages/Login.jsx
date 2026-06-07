@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { Mail, Lock, GraduationCap, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
+import api from '../api/axios';
 
 export default function Login() {
 
@@ -17,7 +17,7 @@ export default function Login() {
         setIsLoading(true);
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/v1/auth/login`, data);
+            const response = await api.post(`/v1/auth/login`, data);
             login(response.data.data.token, response.data.data.user);
             toast.success('Logged in successfully!');
             navigate('/');
