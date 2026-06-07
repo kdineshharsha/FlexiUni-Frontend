@@ -14,7 +14,7 @@ export const featuredJobs = [
   {
     id: 2,
     title: "Weekend Delivery Driver",
-    company: "QuickDrop Logistics",
+    company: "Shan Bakers",
     category: "Delivery",
     salary: "Rs. 2,000 / day",
     location: "Galle Town",
@@ -26,7 +26,7 @@ export const featuredJobs = [
   {
     id: 3,
     title: "Retail Associate",
-    company: "Urban Threads",
+    company: "Sarasavi Bookstore",
     category: "Retail",
     salary: "Rs. 20,000 / month",
     location: "Wakwella Road",

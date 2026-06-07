@@ -14,7 +14,7 @@ export default function Footer() {
                             <div className="bg-indigo-600 text-white p-1.5 rounded-lg">
                                 <GraduationCap className="w-5 h-5" />
                             </div>
-                            <span className="font-bold text-lg text-slate-900">CampusWork</span>
+                            <span className="font-bold text-lg text-slate-900">Flexi<span className="text-indigo-600">Uni</span></span>
                         </div>
                         <p className="text-slate-500 text-sm leading-relaxed mb-6">
                             Connecting university students with reliable local businesses for flexible part-time work.
@@ -55,7 +55,7 @@ export default function Footer() {
 
                 {/* Bottom Bar (Copyright & Socials) */}
                 <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-slate-400 text-sm">© 2026 CampusWork Inc. All rights reserved.</p>
+                    <p className="text-slate-400 text-sm">© 2026 FlexiUni Inc. All rights reserved.</p>
 
                     {/* Social Icons with Smooth Transitions */}
                     <div className="flex gap-4">

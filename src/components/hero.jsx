@@ -57,7 +57,7 @@ export default function Hero() {
                         </div>
                         <div>
                             <p className="text-sm text-slate-500 font-medium">Hired Today</p>
-                            <p className="text-lg font-bold text-slate-900">Alex M. at Local Cafe</p>
+                            <p className="text-lg font-bold text-slate-900">Samith at Star Garment</p>
                         </div>
                     </div>
                 </div>
