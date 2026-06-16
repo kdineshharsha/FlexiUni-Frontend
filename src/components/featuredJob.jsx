@@ -1,7 +1,36 @@
 import { DollarSign, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { featuredJobs } from '../data/mockData';
+import { useEffect, useState } from 'react';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import { FourSquare } from 'react-loading-indicators';
+
 
 export default function FeaturedJobs() {
+
+    const [jobs, setJobs] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const response = await api.get('/v1/jobs/all');
+
+                setJobs(response.data.data || response.data);
+                console.log(response.data.data || response.data);
+
+            } catch (err) {
+                toast.error(err.response.data.message || 'Failed to load jobs. Please try again later.');
+
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchJobs();
+    }, []);
+
     return (
         <section className="py-24 px-4 bg-white">
             <div className="max-w-7xl mx-auto">
@@ -17,20 +46,35 @@ export default function FeaturedJobs() {
                     </a>
                 </div>
 
+
+
                 {/* Jobs Grid (Responsive: Mobile 1, Tablet 2, PC 3) */}
+
+                {isLoading && (
+                    <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+                        <FourSquare color="#4f39f6" size="medium" text="Loading Jobs" textColor="#4f39f6" />
+
+                    </div>
+                )}
+                {!isLoading && jobs.length === 0 && (
+                    <div className="bg-slate-50 text-slate-500 p-10 rounded-xl text-center border border-slate-200">
+                        <p className="text-lg font-medium">No jobs available right now.</p>
+                        <p className="text-sm mt-1">Check back later for new opportunities!</p>
+                    </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {featuredJobs.map((job) => (
-                        <div key={job.id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:border-indigo-300 transition-all duration-300 flex flex-col h-full cursor-pointer group">
+                    {jobs.slice(0, 6).map((job) => (
+                        <Link to={`jobs/${job._id}`} key={job.id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:border-indigo-300 transition-all duration-300 flex flex-col h-full cursor-pointer group">
 
                             {/* Card Header (Logo + Title) */}
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-4">
-                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-slate-700 ${job.logoBg}`}>
-                                        {job.logoText}
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-slate-700 bg-indigo-100`}>
+                                        {job.postedBy.fullName?.charAt(0).toUpperCase() + job.postedBy.fullName?.split(' ')[1]?.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">{job.title}</h3>
-                                        <p className="text-sm text-slate-500">{job.company}</p>
+                                        <p className="text-sm text-slate-500">{job.postedBy.fullName}</p>
                                     </div>
                                 </div>
                             </div>
@@ -52,7 +96,7 @@ export default function FeaturedJobs() {
                             <div className="space-y-3 mb-6 grow">
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <DollarSign className="w-4 h-4 text-slate-400" />
-                                    <span className="text-sm font-semibold text-slate-700">{job.salary}</span>
+                                    <span className="text-sm font-semibold text-slate-700">Rs.{job.salary}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-500">
                                     <MapPin className="w-4 h-4 text-slate-400" />
@@ -60,7 +104,7 @@ export default function FeaturedJobs() {
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-500">
                                     <Clock className="w-4 h-4 text-slate-400" />
-                                    <span className="text-sm">{job.shift}</span>
+                                    <span className="text-sm">{job.shiftDetails}</span>
                                 </div>
                             </div>
 
@@ -68,7 +112,7 @@ export default function FeaturedJobs() {
                             <button className="w-full bg-slate-900 text-white py-3 rounded-xl hover:bg-indigo-600 transition-colors text-sm font-semibold mt-auto flex items-center justify-center gap-2 group-hover:shadow-md">
                                 Apply Now
                             </button>
-                        </div>
+                        </Link>
                     ))}
                 </div>
 
