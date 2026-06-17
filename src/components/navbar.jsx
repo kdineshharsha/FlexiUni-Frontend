@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X, GraduationCap, User, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
-import { set } from "react-hook-form";
+
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

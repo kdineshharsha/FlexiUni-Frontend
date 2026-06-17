@@ -70,7 +70,7 @@ export default function FeaturedJobs() {
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-4">
                                     <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-slate-700 bg-indigo-100`}>
-                                        {job.postedBy.fullName?.charAt(0).toUpperCase() + job.postedBy.fullName?.split(' ')[1]?.charAt(0).toUpperCase()}
+                                        {job.postedBy.fullName?.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">{job.title}</h3>

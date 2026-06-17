@@ -30,6 +30,7 @@ export default function AllJobs() {
                 const response = await api.get(`/v1/jobs?${queryString}`);
 
                 const data = response.data.data;
+                console.log("Fetched Jobs Data:", data);
 
                 setJobs(data.jobs || []);
                 setTotalJobs(data.totalJobs || 0);
@@ -197,11 +198,11 @@ export default function AllJobs() {
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-slate-700 bg-indigo-100">
-                                            {job.companyName ? job.companyName.charAt(0).toUpperCase() : 'J'}
+                                            {job.postedBy?.fullName?.charAt(0).toUpperCase()}
                                         </div>
                                         <div>
                                             <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">{job.title}</h3>
-                                            <p className="text-sm text-slate-500">{job.companyName}</p>
+                                            <p className="text-sm text-slate-500">{job.postedBy?.fullName}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +224,7 @@ export default function AllJobs() {
                                     </div>
                                     <div className="flex items-center gap-3 text-slate-500">
                                         <Clock className="w-4 h-4 text-slate-400" />
-                                        <span className="text-sm">{job.workingHours || job.shift}</span>
+                                        <span className="text-sm">{job.workingHours || job.shiftDetails}</span>
                                     </div>
                                 </div>
 
