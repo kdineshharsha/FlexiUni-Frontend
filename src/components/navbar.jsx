@@ -129,59 +129,58 @@ export default function Navbar() {
 
             {/* Mobile Nav Menu */}
             <div
-                className={`md:hidden bg-white border-b border-slate-200 overflow-hidden transition-all duration-300 ease-in-out ${
-                    isMobileMenuOpen ? "max-h-screen" : "max-h-0"
-                }`}
+                className={`md:hidden bg-white border-b border-slate-200 overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "max-h-screen" : "max-h-0"
+                    }`}
             >
                 <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <Link
+                        to="/jobs"
+                        className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
+                    >
+                        Find a Job
+                    </Link>
+                    {(!user || user?.role === "employer") && (
                         <Link
-                            to="/jobs"
+                            to="/post-job"
                             className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
                         >
-                            Find a Job
+                            Post a Job
                         </Link>
-                        {(!user || user?.role === "employer") && (
-                            <Link
-                                to="/post-job"
-                                className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
-                            >
-                                Post a Job
-                            </Link>
-                        )}
-                        <a
-                            href="#"
-                            className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
+                    )}
+                    <a
+                        href="#"
+                        className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
+                    >
+                        About Us
+                    </a>
+                    <hr className="border-slate-100 my-2" />
+                    {user ? (
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center justify-center gap-2 text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-2.5 rounded-lg font-medium transition-colors"
                         >
-                            About Us
-                        </a>
-                        <hr className="border-slate-100 my-2" />
-                        {user ? (
-                            <button
-                                onClick={handleLogout}
-                                className="w-full flex items-center justify-center gap-2 text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-2.5 rounded-lg font-medium transition-colors"
+                            <LogOut className="w-5 h-5" />
+                            Log out
+                        </button>
+                    ) : (
+                        <div className="flex flex-col gap-2">
+                            <Link
+                                to="/login"
+                                className="w-full text-center text-slate-600 font-medium hover:text-slate-900 hover:bg-slate-50 px-3 py-2.5 rounded-lg transition-colors"
                             >
-                                <LogOut className="w-5 h-5" />
-                                Log out
-                            </button>
-                        ) : (
-                            <div className="flex flex-col gap-2">
-                                <Link
-                                    to="/login"
-                                    className="w-full text-center text-slate-600 font-medium hover:text-slate-900 hover:bg-slate-50 px-3 py-2.5 rounded-lg transition-colors"
-                                >
-                                    Log in
-                                </Link>
-                                <Link
-                                    to="/register"
-                                    className="w-full text-center bg-indigo-600 text-white px-3 py-2.5 rounded-lg hover:bg-indigo-700 font-medium transition-colors"
-                                >
-                                    Sign up
-                                </Link>
-                            </div>
-                        )}
-                    </div>
+                                Log in
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="w-full text-center bg-indigo-600 text-white px-3 py-2.5 rounded-lg hover:bg-indigo-700 font-medium transition-colors"
+                            >
+                                Sign up
+                            </Link>
+                        </div>
+                    )}
                 </div>
-            
+            </div>
+
         </nav>
     );
 }
