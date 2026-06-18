@@ -1,13 +1,71 @@
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, DollarSign, Clock, Briefcase, Calendar, CheckCircle, Zap, User } from 'lucide-react';
-import { featuredJobs } from '../data/mockData.js';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, MapPin, DollarSign, Clock, Briefcase, Calendar, CheckCircle, Zap, User, Loader2 } from 'lucide-react';
+import api from '../api/axios';
+import { useEffect, useState } from 'react';
+import { FourSquare } from 'react-loading-indicators';
+import { useAuth } from '../context/authContext';
+import toast from 'react-hot-toast';
 
 export default function JobDetails() {
     const { id } = useParams();
+    const { user } = useAuth();
+    const [job, setJob] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isApplying, setIsApplying] = useState(false);
+    const [hasApplied, setHasApplied] = useState(false);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
-    const job = featuredJobs.find(j => j.id === parseInt(id));
+    useEffect(() => {
+        const fetchJobDetails = async () => {
+            try {
+                const response = await api.get(`/v1/jobs/${id}`);
+                setJob(response.data.data || response.data);
+                console.log("Fetched Job Details:", response.data.data || response.data);
+                setError(null);
+            } catch (err) {
+                setError(err.response?.data?.message || 'Failed to load job details. Please try again later.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchJobDetails();
+    }, [id, hasApplied]);
 
-    if (!job) {
+    const handleApply = async () => {
+        if (!user) {
+            alert("You need to be logged in to apply for a job.");
+            navigate("/login");
+            return;
+        }
+        if (user.role === "employer") {
+            alert("Employers cannot apply for jobs. Please use a student account.");
+            return;
+        }
+        setIsApplying(true);
+
+        try {
+            await api.post(`/v1/applications/apply/${id}`);
+            toast.success("Successfully applied for the job!");
+
+            setHasApplied(true);
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "Failed to apply for the job. Please try again later.";
+            toast.error(errorMessage);
+        } finally {
+            setIsApplying(false);
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
+                <FourSquare color="#4f39f6" size="medium" text="Loading Job Details" textColor="#4f39f6" />
+            </div>
+        );
+    }
+
+    if (error || !job) {
         return (
             <div className="min-h-[70vh] flex flex-col items-center justify-center bg-slate-50">
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">Job not found!</h2>
@@ -38,11 +96,11 @@ export default function JobDetails() {
 
                             <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6">
                                 <div className={`w-20 h-20 rounded-2xl flex items-center justify-center font-bold text-2xl text-slate-700 shadow-sm border border-slate-100 ${job.logoBg}`}>
-                                    {job.logoText}
+                                    {job.postedBy.fullName ? job.postedBy.fullName.charAt(0).toUpperCase() : 'J'}
                                 </div>
                                 <div>
                                     <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">{job.title}</h1>
-                                    <p className="text-lg text-slate-600 font-medium">{job.company}</p>
+                                    <p className="text-lg text-slate-600 font-medium">{job.postedBy.fullName}</p>
                                 </div>
                             </div>
 
@@ -58,7 +116,7 @@ export default function JobDetails() {
                                 </div>
                                 <div className="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
                                     <Clock className="w-4 h-4 text-slate-400" />
-                                    <span className="text-sm font-medium text-slate-700">{job.shift}</span>
+                                    <span className="text-sm font-medium text-slate-700">{job.shiftDetails}</span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-indigo-50 px-3 py-2 rounded-lg border border-indigo-100">
                                     <Briefcase className="w-4 h-4 text-indigo-500" />
@@ -72,12 +130,9 @@ export default function JobDetails() {
                             <h2 className="text-xl font-bold text-slate-900 mb-4">Job Description</h2>
                             <div className="prose prose-slate max-w-none text-slate-600 space-y-4">
                                 <p>
-                                    We are looking for a reliable and energetic individual to join our team as a {job.title}.
-                                    This is a fantastic opportunity for a student looking for flexible part-time work that fits around their university schedule.
+                                    {job.description}
                                 </p>
-                                <p>
-                                    You will be an integral part of our daily operations, ensuring that our customers receive the best possible service while maintaining a clean and safe environment.
-                                </p>
+
                             </div>
 
                             <h2 className="text-xl font-bold text-slate-900 mt-8 mb-4">Responsibilities</h2>
@@ -112,16 +167,28 @@ export default function JobDetails() {
                             <div className="space-y-4 mb-8">
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-slate-500 flex items-center gap-2"><Calendar className="w-4 h-4" /> Posted</span>
-                                    <span className="font-medium text-slate-900">2 days ago</span>
+                                    <span className="font-medium text-slate-900">{job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Recently'}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-slate-500 flex items-center gap-2"><User className="w-4 h-4" /> Openings</span>
-                                    <span className="font-medium text-slate-900">3 Positions</span>
+                                    <span className="font-medium text-slate-900">{job.vacancy} Positions</span>
                                 </div>
                             </div>
 
-                            <button className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                                Apply for this job
+                            <button
+                                onClick={handleApply}
+                                disabled={isApplying || hasApplied}
+                                className={`w-full py-4 rounded-xl font-bold transition-all duration-300 flex justify-center items-center gap-2
+                                    ${hasApplied
+                                        ? 'bg-green-500 text-white cursor-not-allowed' // Apply කරලා නම් කොළ පාටයි
+                                        : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1'
+                                    }
+                                    ${isApplying ? 'opacity-70 cursor-wait' : ''}
+                                `}
+                            >
+                                {isApplying && <Loader2 className="w-5 h-5 animate-spin" />}
+                                {hasApplied ? "Successfully Applied ✓" : "Apply for this job"}
+
                             </button>
 
                             <p className="text-center text-xs text-slate-500 mt-4">

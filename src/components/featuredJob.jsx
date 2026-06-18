@@ -1,5 +1,4 @@
 import { DollarSign, MapPin, Clock, ArrowRight } from 'lucide-react';
-import { featuredJobs } from '../data/mockData';
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
