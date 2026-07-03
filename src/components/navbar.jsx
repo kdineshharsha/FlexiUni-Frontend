@@ -19,14 +19,14 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     {/* Logo */}
-                    <div className="shrink-0 flex items-center gap-2 cursor-pointer">
+                    <Link to="/" className="shrink-0 flex items-center gap-2 cursor-pointer">
                         <div className="bg-indigo-600 text-white p-2 rounded-lg">
                             <GraduationCap className="w-6 h-6" />
                         </div>
                         <span className="font-bold text-xl tracking-tight text-slate-900">
                             Flexi<span className="text-indigo-600">Uni</span>
                         </span>
-                    </div>
+                    </Link>
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center space-x-8">
@@ -38,7 +38,7 @@ export default function Navbar() {
                         </Link>
                         {(!user || user?.role === "employer") && (
                             <Link
-                                to="/post-job"
+                                to="/employer/post-jobs"
                                 className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
                             >
                                 Post a Job
@@ -65,7 +65,7 @@ export default function Navbar() {
                                         )}
                                     </div>
                                     <span className="font-medium text-slate-700 group-hover:text-indigo-600 transition-colors">
-                                        {user.fullName?.split(" ")[0]}
+                                        {user.fullName}
                                     </span>
                                 </Link>
 
@@ -81,6 +81,7 @@ export default function Navbar() {
                             ) : (
                                 <>
                                     <Link
+
                                         to="/login"
                                         className="text-slate-600 font-medium hover:text-slate-900 transition-colors"
                                     >
@@ -102,6 +103,7 @@ export default function Navbar() {
                         {user && (
                             <Link
                                 to="/profile"
+
                                 className="flex items-center gap-2 group cursor-pointer"
                             >
                                 <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold border border-indigo-200 group-hover:ring-2 ring-indigo-500 transition-all text-sm">
@@ -135,13 +137,15 @@ export default function Navbar() {
                 <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
                     <Link
                         to="/jobs"
+                        onClick={() => setIsMobileMenuOpen(false)}
                         className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
                     >
                         Find a Job
                     </Link>
                     {(!user || user?.role === "employer") && (
                         <Link
-                            to="/post-job"
+                            to="/employer/post-jobs"
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
                         >
                             Post a Job

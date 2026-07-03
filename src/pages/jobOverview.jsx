@@ -96,7 +96,7 @@ export default function JobDetails() {
 
                             <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6">
                                 <div className={`w-20 h-20 rounded-2xl flex items-center justify-center font-bold text-2xl text-slate-700 shadow-sm border border-slate-100 ${job.logoBg}`}>
-                                    {job.postedBy.fullName ? job.postedBy.fullName.charAt(0).toUpperCase() : 'J'}
+                                    {job.companyName ? job.companyName.charAt(0).toUpperCase() : job.postedBy?.fullName.charAt(0).toUpperCase()}
                                 </div>
                                 <div>
                                     <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">{job.title}</h1>
@@ -143,11 +143,17 @@ export default function JobDetails() {
                             </ul>
 
                             <h2 className="text-xl font-bold text-slate-900 mt-8 mb-4">Requirements</h2>
-                            <ul className="space-y-3 text-slate-600">
-                                <li className="flex gap-3"><span className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0"></span> Currently enrolled as a university student.</li>
-                                <li className="flex gap-3"><span className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0"></span> Strong communication and interpersonal skills.</li>
-                                <li className="flex gap-3"><span className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0"></span> Ability to work flexibly according to the required shift.</li>
-                            </ul>
+                            {job.requirements && job.requirements.length > 0 ? (
+                                <ul className="space-y-3 text-slate-600">
+                                    {job.requirements.map((req, index) => (
+                                        <li key={index} className="flex gap-3">
+                                            <span className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0"></span> {req}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-slate-500 italic">No specific requirements mentioned.</p>
+                            )}
                         </div>
 
                     </main>
@@ -180,7 +186,7 @@ export default function JobDetails() {
                                 disabled={isApplying || hasApplied}
                                 className={`w-full py-4 rounded-xl font-bold transition-all duration-300 flex justify-center items-center gap-2
                                     ${hasApplied
-                                        ? 'bg-green-500 text-white cursor-not-allowed' // Apply කරලා නම් කොළ පාටයි
+                                        ? 'bg-green-500 text-white cursor-not-allowed'
                                         : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1'
                                     }
                                     ${isApplying ? 'opacity-70 cursor-wait' : ''}
