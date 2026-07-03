@@ -30,12 +30,14 @@ export default function Navbar() {
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center space-x-8">
-                        <Link
-                            to="/jobs"
-                            className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
-                        >
-                            Find a Job
-                        </Link>
+                        {(!user || user.role === 'student') &&
+                            (<Link
+                                to="/jobs"
+                                className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
+                            >
+                                Find a Job
+                            </Link>)}
+
                         {(!user || user?.role === "employer") && (
                             <Link
                                 to="/employer/post-jobs"
@@ -135,13 +137,15 @@ export default function Navbar() {
                     }`}
             >
                 <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <Link
-                        to="/jobs"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
-                    >
-                        Find a Job
-                    </Link>
+                    {(!user || user.role === "student") && (
+                        <Link
+                            to="/jobs"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
+                        >
+                            Find a Job
+                        </Link>)}
+
                     {(!user || user?.role === "employer") && (
                         <Link
                             to="/employer/post-jobs"

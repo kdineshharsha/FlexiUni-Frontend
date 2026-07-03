@@ -37,7 +37,7 @@ export default function MyJobs() {
 
     if (isLoading) {
         return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center text-slate-500">
+            <div className="h-screen flex flex-col items-center justify-center text-slate-500">
                 <FourSquare color="#4f39f6" size="medium" text="Loading Workspace" textColor="#4f39f6" />
             </div>
         );
@@ -136,8 +136,8 @@ export default function MyJobs() {
 
                             {/* Action Buttons (Employer Specific) */}
                             <div className="grid grid-cols-3 gap-3 mt-auto pt-5 border-t border-slate-100">
-                                <Link to={`/jobs/${job._id}`} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors text-xs font-semibold border border-slate-200">
-                                    <Eye className="w-4 h-4" /> Live
+                                <Link to={`/application/${job._id}`} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors text-xs font-semibold border border-slate-200">
+                                    <Eye className="w-4 h-4" /> Applicants
                                 </Link>
                                 <Link to={`/employer/edit-job/${job._id}`} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors text-xs font-semibold border border-slate-200">
                                     <Edit className="w-4 h-4" /> Edit

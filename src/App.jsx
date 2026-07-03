@@ -9,6 +9,7 @@ import AllJobs from './pages/Jobs'
 import MyJobs from './pages/Employer/myJobs'
 import PostJob from './pages/Employer/postJob'
 import EditJob from './pages/Employer/editJobs'
+import ViewApplicants from './pages/Employer/viewApplicants'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path='/employer/my-jobs' element={<MyJobs />} />
           <Route path='/employer/post-jobs' element={<PostJob />} />
           <Route path='/employer/edit-job/:id' element={<EditJob />} />
+          <Route path='/application/:id' element={<ViewApplicants />} />
 
 
         </Route>
