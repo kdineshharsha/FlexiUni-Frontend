@@ -20,8 +20,18 @@ export default function JobDetails() {
         const fetchJobDetails = async () => {
             try {
                 const response = await api.get(`/v1/jobs/${id}`);
+
+
                 setJob(response.data.data || response.data);
-                console.log("Fetched Job Details:", response.data.data || response.data);
+                if (user && user.role === 'student') {
+                    try {
+                        const applyStatus = await api.get(`/v1/applications/status/${id}`);
+                        setHasApplied(applyStatus.data.hasApplied)
+
+                    } catch (error) {
+                        console.error("Failed to check application status", error);
+                    }
+                }
                 setError(null);
             } catch (err) {
                 setError(err.response?.data?.message || 'Failed to load job details. Please try again later.');
@@ -30,7 +40,7 @@ export default function JobDetails() {
             }
         };
         fetchJobDetails();
-    }, [id, hasApplied]);
+    }, [id, user]);
 
     const handleApply = async () => {
         if (!user) {
@@ -49,6 +59,8 @@ export default function JobDetails() {
             toast.success("Successfully applied for the job!");
 
             setHasApplied(true);
+            const updatedJobResponse = await api.get(`/v1/jobs/${id}`);
+            setJob(updatedJobResponse.data.data || updatedJobResponse.data);
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Failed to apply for the job. Please try again later.";
             toast.error(errorMessage);

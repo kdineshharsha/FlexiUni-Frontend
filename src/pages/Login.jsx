@@ -19,9 +19,11 @@ export default function Login() {
         try {
             const response = await api.post(`/v1/auth/login`, data);
             login(response.data.data.token, response.data.data.user);
+            console.log("Login successful:", response.data.data.user);
             toast.success('Logged in successfully!');
             navigate('/');
         } catch (error) {
+            console.log(error)
             const currentError = error.response?.data?.message || 'An error occurred during login.';
             toast.error(currentError);
         } finally {
