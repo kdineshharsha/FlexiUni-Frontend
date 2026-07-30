@@ -15,7 +15,7 @@ export default function Benefits() {
                 <div className="max-w-6xl mx-auto">
 
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold tracking-tight mb-4">Why Choose CampusWork?</h2>
+                        <h2 className="text-3xl font-bold tracking-tight mb-4">Why Choose FlexiUni?</h2>
                         <p className="text-slate-400 text-lg max-w-2xl mx-auto">
                             We are building the most trusted hyper-local job platform connecting the campus community.
                         </p>

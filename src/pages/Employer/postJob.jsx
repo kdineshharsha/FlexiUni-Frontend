@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Briefcase, MapPin, DollarSign, Clock, Users, FileText, CheckCircle, ArrowLeft, Loader2, Building, PlusCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Briefcase, MapPin, DollarSign, Clock, Users, FileText, CheckCircle, ArrowLeft, Loader2, Building, PlusCircle, Phone } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
 import { useAuth } from '../../context/authContext';
-
 
 const CATEGORIES = [
     "Supermarket", "Garment", "Shop", "Delivery", "Retail",
@@ -14,8 +13,17 @@ const CATEGORIES = [
 const SHIFT_TYPES = ["Morning Shifts", "Afternoon Shifts", "Evening Shifts", "Night Shifts", "Weekend Shifts", "Weekday Shifts", "Flexible Hours", "Event-Based", "Full-time"];
 
 export default function PostJob() {
-    const navigate = useNavigate();
     const { user } = useAuth();
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!user) {
+            toast.error("You need to login first!");
+            navigate('/login');
+        } else if (user.role !== 'employer') {
+            toast.error("Only employers can post jobs!");
+            navigate('/jobs'); // Student කෙනෙක් ආවොත් Jobs පේජ් එකට යවනවා
+        }
+    }, [user]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -31,7 +39,8 @@ export default function PostJob() {
         shiftType: "",
         shiftDetails: "",
         description: "",
-        requirements: ""
+        requirements: "",
+        contactMethods: [{ type: 'whatsapp', value: '' }]
     });
 
     const handleChange = (e) => {
@@ -40,6 +49,30 @@ export default function PostJob() {
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: undefined }));
         }
+    };
+
+    const handleContactChange = (index, field, val) => {
+        const updated = [...formData.contactMethods];
+        updated[index][field] = val;
+        setFormData(prev => ({ ...prev, contactMethods: updated }));
+
+        if (errors.contactMethods) {
+            setErrors(prev => ({ ...prev, contactMethods: undefined }));
+        }
+    };
+
+    const addContactMethod = () => {
+        if (formData.contactMethods.length < 3) {
+            setFormData(prev => ({
+                ...prev,
+                contactMethods: [...prev.contactMethods, { type: 'call', value: '' }]
+            }));
+        }
+    };
+
+    const removeContactMethod = (index) => {
+        const updated = formData.contactMethods.filter((_, i) => i !== index);
+        setFormData(prev => ({ ...prev, contactMethods: updated }));
     };
 
     const validateForm = () => {
@@ -52,6 +85,17 @@ export default function PostJob() {
         if (!formData.vacancy) newErrors.vacancy = "Vacancy count is required";
         if (!formData.shiftType) newErrors.shiftType = "Please select shift type";
         if (!formData.description.trim()) newErrors.description = "Job description is required";
+
+        let hasContactError = false;
+        formData.contactMethods.forEach(contact => {
+            if (!contact.value.trim()) hasContactError = true;
+        });
+
+        if (formData.contactMethods.length === 0) {
+            newErrors.contactMethods = "Please add at least one contact method.";
+        } else if (hasContactError) {
+            newErrors.contactMethods = "Please fill in valid details for all contact methods.";
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -67,10 +111,10 @@ export default function PostJob() {
 
         setIsSubmitting(true);
         try {
-
             const requirementsArray = formData.requirements
                 ? formData.requirements.split('\n').filter(req => req.trim() !== '')
                 : [];
+
             const jobPayload = {
                 title: formData.title,
                 companyName: formData.companyName,
@@ -80,9 +124,9 @@ export default function PostJob() {
                 vacancy: parseInt(formData.vacancy),
                 shiftDetails: `${formData.shiftType}${formData.shiftDetails ? ' : ' + formData.shiftDetails : ''}`,
                 description: formData.description,
-                requirements: requirementsArray
+                requirements: requirementsArray,
+                contactMethods: formData.contactMethods
             };
-
 
             await api.post('/v1/jobs/create', jobPayload);
 
@@ -101,7 +145,8 @@ export default function PostJob() {
     const resetForm = () => {
         setFormData({
             title: "", companyName: user?.companyName || "", category: "", location: "",
-            salary: "", vacancy: "1", shiftType: "", shiftDetails: "", description: ""
+            salary: "", vacancy: "1", shiftType: "", shiftDetails: "", description: "", requirements: "",
+            contactMethods: [{ type: 'whatsapp', value: '' }]
         });
         setErrors({});
         setIsSubmitted(false);
@@ -252,8 +297,6 @@ export default function PostJob() {
                             {errors.description && <p className="text-xs text-red-500">{errors.description}</p>}
                         </div>
 
-                        {/* Job requirements */}
-
                         <div className="flex flex-col gap-1.5">
                             <label className="text-sm font-medium text-slate-700">Requirements & Qualifications</label>
                             <p className="text-xs text-slate-500 mb-1">Enter each requirement on a new line.</p>
@@ -263,7 +306,65 @@ export default function PostJob() {
                     </div>
                 </div>
 
+                {/* 🔴 5. Contact Options  */}
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div className="flex items-center gap-2.5 px-6 py-4 border-b border-slate-200 bg-slate-50/50">
+                        <Phone className="w-5 h-5 text-indigo-600" />
+                        <h3 className="text-sm font-semibold text-slate-900">Direct Contact Options</h3>
+                    </div>
+                    <div className="p-6">
+                        <label className="block text-sm font-medium text-slate-700 mb-4">
+                            How should applicants contact you? (Max 3) *
+                        </label>
 
+                        <div className="space-y-4">
+                            {formData.contactMethods.map((contact, index) => (
+                                <div key={index} className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                                    <select
+                                        value={contact.type}
+                                        onChange={(e) => handleContactChange(index, 'type', e.target.value)}
+                                        className="w-full sm:w-1/3 px-4 py-2.5 rounded-lg border border-slate-300 outline-none focus:border-indigo-500 bg-slate-50 cursor-pointer"
+                                    >
+                                        <option value="whatsapp">WhatsApp Message</option>
+                                        <option value="call">Phone Call</option>
+                                        <option value="email">Email</option>
+                                    </select>
+
+                                    <div className="flex-1 w-full flex gap-2">
+                                        <input
+                                            type={contact.type === 'email' ? 'email' : 'tel'}
+                                            placeholder={contact.type === 'email' ? 'e.g. hr@company.com' : 'e.g. +94771234567'}
+                                            value={contact.value}
+                                            onChange={(e) => handleContactChange(index, 'value', e.target.value)}
+                                            className={`flex-1 w-full px-4 py-2.5 rounded-lg border outline-none transition-all ${errors.contactMethods ? 'border-red-400 ring-2 ring-red-100' : 'border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100'}`}
+                                        />
+                                        {formData.contactMethods.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => removeContactMethod(index)}
+                                                className="px-4 py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100 shrink-0"
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {errors.contactMethods && <p className="text-xs text-red-500 mt-2">{errors.contactMethods}</p>}
+
+                        {formData.contactMethods.length < 3 && (
+                            <button
+                                type="button"
+                                onClick={addContactMethod}
+                                className="mt-4 text-sm text-indigo-600 font-semibold hover:text-indigo-700 flex items-center gap-1.5 transition-colors"
+                            >
+                                <PlusCircle size={16} /> Add Another Method
+                            </button>
+                        )}
+                    </div>
+                </div>
 
                 {/* Submit Buttons */}
                 <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 pb-8">

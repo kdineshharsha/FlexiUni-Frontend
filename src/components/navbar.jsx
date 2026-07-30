@@ -38,7 +38,7 @@ export default function Navbar() {
                                 Find a Job
                             </Link>)}
 
-                        {(!user || user?.role === "employer") && (
+                        {(user?.role === "employer") && (
                             <Link
                                 to="/employer/my-jobs"
                                 className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
@@ -46,7 +46,15 @@ export default function Navbar() {
                                 My Jobs
                             </Link>
                         )}
-                        {(!user || user?.role === "employer") && (
+                        {(user?.role === "student") && (
+                            <Link
+                                to="/my-jobs"
+                                className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
+                            >
+                                My Jobs
+                            </Link>
+                        )}
+                        {(user?.role === "employer") && (
                             <Link
                                 to="/employer/post-jobs"
                                 className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
@@ -154,9 +162,18 @@ export default function Navbar() {
                             Find a Job
                         </Link>)}
 
-                    {(!user || user?.role === "employer") && (
+                    {(user?.role === "employer") && (
                         <Link
                             to="/employer/my-jobs"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
+                        >
+                            My Jobs
+                        </Link>
+                    )}
+                    {(user?.role === "student") && (
+                        <Link
+                            to="/my-jobs"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
                         >

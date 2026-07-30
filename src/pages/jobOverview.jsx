@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, MapPin, DollarSign, Clock, Briefcase, Calendar, CheckCircle, Zap, User, Loader2 } from 'lucide-react';
+import { ArrowLeft, MapPin, DollarSign, Clock, Briefcase, Calendar, CheckCircle, Zap, User, Loader2, MessageCircle, Phone, Mail } from 'lucide-react';
 import api from '../api/axios';
 import { useEffect, useState } from 'react';
 import { FourSquare } from 'react-loading-indicators';
@@ -21,13 +21,11 @@ export default function JobDetails() {
             try {
                 const response = await api.get(`/v1/jobs/${id}`);
 
-
                 setJob(response.data.data || response.data);
                 if (user && user.role === 'student') {
                     try {
                         const applyStatus = await api.get(`/v1/applications/status/${id}`);
                         setHasApplied(applyStatus.data.hasApplied)
-
                     } catch (error) {
                         console.error("Failed to check application status", error);
                     }
@@ -71,7 +69,7 @@ export default function JobDetails() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
+            <div className="min-h-screen flex flex-col items-center justify-center text-center bg-slate-50 ">
                 <FourSquare color="#4f39f6" size="medium" text="Loading Job Details" textColor="#4f39f6" />
             </div>
         );
@@ -144,7 +142,6 @@ export default function JobDetails() {
                                 <p>
                                     {job.description}
                                 </p>
-
                             </div>
 
                             <h2 className="text-xl font-bold text-slate-900 mt-8 mb-4">Responsibilities</h2>
@@ -167,7 +164,6 @@ export default function JobDetails() {
                                 <p className="text-slate-500 italic">No specific requirements mentioned.</p>
                             )}
                         </div>
-
                     </main>
 
                     {/* Right Column: Sticky Apply Card */}
@@ -206,12 +202,67 @@ export default function JobDetails() {
                             >
                                 {isApplying && <Loader2 className="w-5 h-5 animate-spin" />}
                                 {hasApplied ? "Successfully Applied ✓" : "Apply for this job"}
-
                             </button>
 
                             <p className="text-center text-xs text-slate-500 mt-4">
-                                By applying, you agree to CampusWork's Terms of Service.
+                                By applying, you agree to FlexiUni's Terms of Service.
                             </p>
+
+                            {/* 🔴 Direct Contact Options Section  */}
+                            {job.contactMethods && job.contactMethods.length > 0 && (
+                                <div className="mt-6 border-t border-slate-100 pt-6">
+                                    <h4 className="text-sm font-bold text-slate-900 mb-3">Direct Contact Options</h4>
+                                    <div className="flex flex-col gap-2.5">
+
+                                        {job.contactMethods.map((contact, idx) => {
+                                            if (contact.type === 'whatsapp') {
+                                                return (
+                                                    <a
+                                                        key={idx}
+                                                        href={`https://wa.me/${contact.value.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi, I'm reaching out regarding the ${job.title} job position on FlexiUni.`)}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="w-full py-2.5 px-4 rounded-xl font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 flex items-center justify-center gap-2 transition-all text-sm"
+                                                    >
+                                                        <MessageCircle className="w-4 h-4" />
+                                                        <span>Chat on WhatsApp</span>
+                                                    </a>
+                                                );
+                                            }
+
+                                            if (contact.type === 'call') {
+                                                return (
+                                                    <a
+                                                        key={idx}
+                                                        href={`tel:${contact.value}`}
+                                                        className="w-full py-2.5 px-4 rounded-xl font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 flex items-center justify-center gap-2 transition-all text-sm"
+                                                    >
+                                                        <Phone className="w-4 h-4" />
+                                                        <span>Call ({contact.value})</span>
+                                                    </a>
+                                                );
+                                            }
+
+                                            if (contact.type === 'email') {
+                                                return (
+                                                    <a
+                                                        key={idx}
+                                                        href={`mailto:${contact.value}?subject=${encodeURIComponent(`Inquiry regarding ${job.title}`)}`}
+                                                        className="w-full py-2.5 px-4 rounded-xl font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 flex items-center justify-center gap-2 transition-all text-sm"
+                                                    >
+                                                        <Mail className="w-4 h-4" />
+                                                        <span>Email Employer</span>
+                                                    </a>
+                                                );
+                                            }
+                                            return null;
+                                        })}
+
+                                    </div>
+                                </div>
+                            )}
+
+
                         </div>
                     </aside>
 

@@ -97,7 +97,7 @@ export default function MyJobs() {
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-slate-700 bg-indigo-100">
                                         {/* Fallback to Job Title's first letter if Company Name isn't populated */}
-                                        {job.title?.charAt(0).toUpperCase()}
+                                        {job.companyName?.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">{job.title}</h3>

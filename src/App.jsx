@@ -11,6 +11,7 @@ import PostJob from './pages/Employer/postJob'
 import EditJob from './pages/Employer/editJobs'
 import ViewApplicants from './pages/Employer/viewApplicants'
 import Profile from './pages/profile'
+import MyApplications from './pages/myApplications'
 
 function App() {
 
@@ -24,6 +25,8 @@ function App() {
           <Route path='/jobs/:id' element={<JobDetails />} />
           <Route path='/jobs' element={<AllJobs />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/my-jobs' element={<MyApplications />} />
+
           <Route path='/employer/my-jobs' element={<MyJobs />} />
           <Route path='/employer/post-jobs' element={<PostJob />} />
           <Route path='/employer/edit-job/:id' element={<EditJob />} />

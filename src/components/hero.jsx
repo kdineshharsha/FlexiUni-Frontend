@@ -1,4 +1,5 @@
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
     return (
@@ -26,11 +27,11 @@ export default function Hero() {
 
                     {/* Call to Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <button className="bg-indigo-600 text-white px-8 py-4 rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 text-lg group">
+                        <Link to="/jobs" className="bg-indigo-600 text-white px-8 py-4 rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 text-lg group">
                             Find a Job Now
 
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        </Link>
                         <button className="bg-white text-indigo-600 border border-indigo-200 px-8 py-4 rounded-xl hover:bg-indigo-50 font-medium transition-colors text-lg">
                             Post a Job
                         </button>
