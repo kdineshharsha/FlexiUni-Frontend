@@ -32,7 +32,7 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
 
             {/* Top Logo */}
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
@@ -55,7 +55,7 @@ export default function Login() {
 
             {/* Login Card */}
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-slate-100">
+                <div className="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10 border border-slate-100">
                     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
 
                         {/* Email Input */}

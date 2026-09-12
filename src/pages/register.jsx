@@ -47,7 +47,7 @@ export default function Register() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 px-4 lg:px-8">
 
             {/* Top Logo & Headings */}
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
@@ -107,7 +107,7 @@ export default function Register() {
                             <label htmlFor="name" className="block text-sm font-medium text-slate-700">
                                 Full Name {role === 'employer' && "(or Company Name)"}
                             </label>
-                            <div className="mt-1 relative rounded-md shadow-sm">
+                            <div className="mt-1 relative rounded-xl shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <User className="h-5 w-5 text-slate-400" />
                                 </div>
@@ -130,7 +130,7 @@ export default function Register() {
                                     <label htmlFor="studentId" className="block text-sm font-medium text-slate-700">
                                         Student ID
                                     </label>
-                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                    <div className="mt-1 relative rounded-xl shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <GraduationCap className="h-5 w-5 text-slate-400" />
                                         </div>
@@ -189,7 +189,7 @@ export default function Register() {
                             <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                                 Email address
                             </label>
-                            <div className="mt-1 relative rounded-md shadow-sm">
+                            <div className="mt-1 relative rounded-xl shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <Mail className="h-5 w-5 text-slate-400" />
                                 </div>
@@ -216,7 +216,7 @@ export default function Register() {
                             <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                                 Password
                             </label>
-                            <div className="mt-1 relative rounded-md shadow-sm">
+                            <div className="mt-1 relative rounded-xl shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <Lock className="h-5 w-5 text-slate-400" />
                                 </div>

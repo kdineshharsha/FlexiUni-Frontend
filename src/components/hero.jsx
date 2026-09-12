@@ -1,7 +1,9 @@
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/authContext';
 
 export default function Hero() {
+    const { user } = useAuth();
     return (
         <section className="bg-slate-50 pt-12 pb-24 lg:pt-20 lg:pb-32 px-4 relative overflow-hidden">
             {/* Background decorative  */}
@@ -17,24 +19,70 @@ export default function Hero() {
                         1,200+ active jobs this week
                     </div>
 
+
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                        Find the Perfect Part-Time Job <span className="text-indigo-600">Around Campus.</span>
+                        {user?.role === 'employer' ? (
+                            <>
+                                Hire Verified Uni Students{" "}
+                                <span className="text-indigo-600">For Your Shifts.</span>
+                            </>
+                        ) : (
+                            <>
+                                Find the Perfect Part-Time Job{" "}
+                                <span className="text-indigo-600">Around Campus.</span>
+                            </>
+                        )}
                     </h1>
 
                     <p className="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Connect with local businesses in minutes. Flexible hours for students, reliable staff for employers.
+                        {user?.role === 'employer' ? (
+                            <>
+                                Welcome back,{" "}
+                                <span className="text-indigo-600 font-semibold">
+                                    {user.companyName || user.fullName || 'Partner'}
+                                </span>
+                                ! Post urgent shifts, manage your active listings, and find reliable student help in minutes.
+                            </>
+                        ) : (
+                            'Connect with local businesses in minutes. Flexible hours for students, reliable staff for employers.'
+                        )}
                     </p>
 
                     {/* Call to Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <Link to="/jobs" className="bg-indigo-600 text-white px-8 py-4 rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 text-lg group">
-                            Find a Job Now
-
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                        <button className="bg-white text-indigo-600 border border-indigo-200 px-8 py-4 rounded-xl hover:bg-indigo-50 font-medium transition-colors text-lg">
-                            Post a Job
-                        </button>
+                    <div className="flex sm:flex-row gap-4 justify-center lg:justify-start">
+                        {user?.role === 'employer' ? (
+                            <>
+                                <Link
+                                    to="/employer/post-jobs"
+                                    className="bg-indigo-600 text-white sm:px-8 sm:py-4 px-4 py-2 rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 text-lg group"
+                                >
+                                    Post a Job
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                                <Link
+                                    to="/employer/my-jobs"
+                                    className="bg-white text-indigo-600 border border-indigo-200 sm:px-8 sm:py-4 px-4 py-2 rounded-xl hover:bg-indigo-50 font-medium transition-colors text-lg flex items-center justify-center"
+                                >
+                                    My Jobs
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/jobs"
+                                    className="bg-indigo-600 text-white sm:px-8 sm:py-4 px-4 py-2 rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 text-lg group"
+                                >
+                                    Find a Job Now
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                                <Link
+                                    to="/employer/post-job"
+                                    className="bg-white text-indigo-600 border border-indigo-200 sm:px-8 sm:py-4 px-4 py-2 rounded-xl hover:bg-indigo-50 font-medium transition-colors text-lg"
+                                >
+                                    Post a Job
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                 </div>

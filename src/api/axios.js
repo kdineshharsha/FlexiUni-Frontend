@@ -24,12 +24,19 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
+      const hadToken = localStorage.getItem("token");
+
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
-      toast.error("Session expired. Please login again.");
+      const isPublicPath =
+        window.location.pathname === "/" ||
+        window.location.pathname === "/login";
 
-      window.location.href = "/login";
+      if (hadToken && !isPublicPath) {
+        toast.error("Session expired. Please login again.");
+        window.location.href = "/login";
+      }
     }
 
     return Promise.reject(error);

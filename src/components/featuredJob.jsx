@@ -14,7 +14,7 @@ export default function FeaturedJobs() {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const response = await api.get('/v1/jobs/all');
+                const response = await api.get('/v1/jobs/recommended');
 
                 setJobs(response.data.data || response.data);
                 console.log(response.data.data || response.data);
