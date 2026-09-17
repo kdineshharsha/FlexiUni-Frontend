@@ -19,8 +19,10 @@ export default function Login() {
         try {
             const response = await api.post(`/v1/auth/login`, data);
             login(response.data.data.token, response.data.data.user);
-            console.log("Login successful:", response.data.data.user);
             toast.success('Logged in successfully!');
+            if (response.data.data.user.role === "employer") {
+                return navigate('/employer/my-jobs')
+            }
             navigate('/');
         } catch (error) {
             console.log(error)

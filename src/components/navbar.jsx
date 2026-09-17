@@ -63,7 +63,7 @@ export default function Navbar() {
                             </Link>
                         )}
                         <a
-                            href="#"
+                            href="/about-us"
                             className="text-slate-600 hover:text-indigo-600 font-medium transition-colors"
                         >
                             About Us
@@ -190,7 +190,7 @@ export default function Navbar() {
                         </Link>
                     )}
                     <a
-                        href="#"
+                        href="/about-us"
                         className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-md"
                     >
                         About Us

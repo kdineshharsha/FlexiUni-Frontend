@@ -163,7 +163,7 @@ export default function PostJob() {
                     Your listing is now live on FlexiUni. Students will start applying soon.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                    <Link to="/dashboard/my-jobs" className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
+                    <Link to="/employer/my-jobs" className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
                         <Briefcase size={16} /> View My Jobs
                     </Link>
                     <button onClick={resetForm} className="flex items-center justify-center gap-2 px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors">
